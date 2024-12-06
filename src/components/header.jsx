@@ -1,15 +1,19 @@
 import React from 'react';
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></link>
+import { useNavigate } from 'react-router-dom';
+import { FaHome, FaUserMd, FaSchool, FaClipboardList, FaBook, FaUser } from 'react-icons/fa';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Navbar=() => {
+const Navbar = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
         <div className="container-fluid">
-          
-          <a className="navbar-brand" href="/">
-  <img src="/favicon1.ico" alt="Logo" style={{ width: "30px", height: "30px" }} />
-</a>
+
+          <a className="navbar-brand" onClick={() => navigate('/')}>
+            <img src="/favicon1.ico" alt="Logo" style={{ width: "30px", height: "30px" }} />
+          </a>
 
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
             <span className="navbar-toggler-icon"></span>
@@ -17,13 +21,34 @@ const Navbar=() => {
           <div className="collapse navbar-collapse" id="mynavbar">
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
-                <a className="nav-link" href="">Link</a>
+                <a className="nav-link" onClick={() => navigate('/')}>
+                  <FaHome /> Home
+                </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="">Link</a>
+                <a className="nav-link" onClick={() => navigate('/therapists')}>
+                  <FaUserMd /> Specialists
+                </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="">Link</a>
+                <a className="nav-link" onClick={() => navigate('/sessions')}>
+                  <FaClipboardList /> Sessions
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => navigate('/episodes')}>
+                  <FaBook /> Episodes
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => navigate('/schools')}>
+                  <FaSchool /> Schools
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => navigate('/profiles')}>
+                  <FaUser /> Profiles
+                </a>
               </li>
             </ul>
             <form className="d-flex">
@@ -33,11 +58,6 @@ const Navbar=() => {
           </div>
         </div>
       </nav>
-
-      <div className="container-fluid mt-3">
-        <h3>Navbar Forms</h3>
-        <p>You can also include forms inside the navigation bar.</p>
-      </div>
     </div>
   );
 }

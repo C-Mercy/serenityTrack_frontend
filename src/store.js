@@ -1,18 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit';
-import logger from 'redux-logger'; // Ensure logger is imported correctly
-import apiSlice from './slices/apiSlice';
-import authenticationReducer from './slices/authSlice';
-import profileApi from './slices/profileSlice';
+import {configureStore} from '@reduxjs/toolkit';
+import {apiSlice} from './slices/apiSlice';
+import authSliceReducer from "./slices/authSlice"
+
 
 const store = configureStore({
-  reducer: {
-    api: apiSlice.reducer,
-    [profileApi.reducerPath]: profileApi.reducer,
-    
-    authentication: authenticationReducer,
-  },
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(logger,profileApi.middleware), // Correctly adding logger middleware
-});
+    reducer:{
+        [apiSlice.reducerPath]: apiSlice.reducer,
+        auth: authSliceReducer,
+
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
+    devTools: true
+})
+
 
 export default store;

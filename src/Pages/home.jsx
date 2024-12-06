@@ -1,158 +1,167 @@
-import React, { useEffect, useState } from 'react';
-import { FaUser, FaSchool, FaUserMd } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { useFetchUserByIdQuery } from '../slices/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { FaUser, FaUserSlash } from 'react-icons/fa';
 import Countdown from 'react-countdown';
 import Navbar from "../components/header";
-import { useFetchProfilesQuery } from '../slices/profileSlice';
-import { useNavigate } from 'react-router-dom';
+import RecordEpisodeWizard from "../components/episodeWizard";
+import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
 
 const Home = () => {
-  const { data: profiles, isLoading, error } = useFetchProfilesQuery({}); // Fetch profiles from the backend
-  const navigate = useNavigate();
+  const userInfo = sessionStorage.getItem('user');
+  const loggeduser = JSON.parse(userInfo);
+  const { data: user, isLoading, error } = useFetchUserByIdQuery(loggeduser.id);
 
-  // Mock data for the two schools and autism specialists (This should ideally come from the backend)
+  const navigate = useNavigate();
+  const [selectedProfileId, setSelectedProfileId] = useState(null);
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
+
   const schoolsForAutism = [
-    { name: 'School 1', location: 'Nairobi' },
-    { name: 'School 2', location: 'Mombasa' }
+    { name: 'Nairobi Primary School', location: 'Nairobi', hotline: '+254701234567', address: 'P.O. Box 12345, Nairobi' },
+    { name: 'Mombasa Academy', location: 'Mombasa', hotline: '+254712345678', address: 'P.O. Box 67890, Mombasa' },
   ];
 
   const autismSpecialists = [
-    { name: 'Dr. Jane Doe', specialty: 'Autism Specialist' },
-    { name: 'Dr. John Smith', specialty: 'Behavior Analyst' }
+    { name: 'Dr. Mwangi', location: 'Nairobi', phone: '+254701234567', address: 'P.O. Box 12345, Nairobi' },
+    { name: 'Dr. Akinyi', location: 'Mombasa', phone: '+254712345678', address: 'P.O. Box 67890, Mombasa' },
   ];
 
-  // Handler for profile creation
   const handleCreateProfile = () => {
-    navigate('/create-profile'); // Redirect to profile creation page
+    navigate('/create-profile');
   };
 
-  // Countdown to World Autism Day (April 2nd)
+  const handleOpenWizard = (profileId) => {
+    setSelectedProfileId(profileId);
+    setIsWizardOpen(true);
+  };
+
+  const handleCloseWizard = () => {
+    setIsWizardOpen(false);
+    setSelectedProfileId(null);
+  };
+
   const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       return <span>It's World Autism Day!</span>;
     } else {
       return (
-        <div>
-          <p>{days} Days</p>
-          <p>{hours} Hours</p>
-          <p>{minutes} Minutes</p>
-          <p>{seconds} Seconds</p>
-        </div>
+        <Typography variant="body2">
+          {days} Days {hours} Hours {minutes} Minutes {seconds} Seconds
+        </Typography>
       );
     }
   };
 
-  // Inline styles for the components
-  const containerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    padding: '20px'
-  };
-
-  const cardStyle = {
-    backgroundColor: '#f9f9f9',
-    borderRadius: '10px',
-    padding: '20px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    padding: '10px 20px',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginTop: '10px'
-  };
-
-  const buttonHoverStyle = {
-    backgroundColor: '#45a049'
-  };
+  const currentYear = new Date().getFullYear();
+  const targetDate = new Date(`April 2, ${new Date() > new Date(`April 2, ${currentYear}`) ? currentYear + 1 : currentYear}`);
 
   return (
     <div>
       <Navbar />
-      <div style={containerStyle}>
-        {/* Welcome Back Card */}
-        <div style={cardStyle}>
-          <h2>Welcome Back, {profiles && profiles.length > 0 ? profiles[0].first_name : 'User'}</h2>
-          <div>
-            <FaUser size={50} />
-            <p>Your Profile</p>
-            <button 
-              style={buttonStyle}
-              onMouseOver={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
-              onMouseOut={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
-              onClick={handleCreateProfile}>Create Profile</button>
-          </div>
-        </div>
+      <div style={{ padding: '20px', backgroundColor: '#f0f8ff' }}>
+        <Grid container spacing={4}>
+          {/* Welcome Back Card */}
+          <Grid item xs={12} md={6}>
+            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+              <CardContent>
+                <Typography variant="h5">Welcome Back, {loggeduser.username}</Typography>
+                <FaUser size={40} />
+                <Typography variant="body1">Explore your profiles and track progress.</Typography>
+                <Button variant="contained" color="primary" onClick={handleCreateProfile} style={{ marginTop: '10px' }}>
+                  Create Profile
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Countdown Card to World Autism Day */}
-        <div style={cardStyle}>
-          <h3>Countdown to World Autism Day</h3>
-          <Countdown
-            date={new Date('2024-04-02T00:00:00')}
-            renderer={countdownRenderer}
-          />
-        </div>
+          {/* Countdown Card */}
+          <Grid item xs={12} md={6}>
+            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+              <CardContent>
+                <Typography variant="h5">Countdown to World Autism Day</Typography>
+                <Typography variant="subtitle1" style={{ color: 'blue' }}>2nd April</Typography>
+                <Countdown date={targetDate} renderer={countdownRenderer} />
+              </CardContent>
+            </Card>
+          </Grid>
 
-        {/* Profile Info Card */}
-        <div style={cardStyle}>
-          <h3>Your Profiles</h3>
-          <div>
+          {/* Profiles */}
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>Your Profiles</Typography>
             {isLoading ? (
-              <p>Loading profiles...</p>
+              <Typography>Loading profiles...</Typography>
             ) : error ? (
-              <p>Error loading profiles</p>
-            ) : profiles && profiles.length > 0 ? (
-              profiles.map(profile => (
-                <div key={profile.id}>
-                  <p>{profile.first_name} {profile.last_name}</p>
-                  <p>{profile.diagnosis_date}</p>
-                  <p>{profile.severity}</p>
-                </div>
-              ))
+              <Typography>Error loading profiles.</Typography>
+            ) : user && user.profiles.length > 0 ? (
+              <Grid container spacing={3}>
+                {user.profiles.map((profile) => (
+                  <Grid item xs={12} sm={6} md={3} key={profile.id}>
+                    <Card style={{ padding: '20px', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>
+                      <CardContent>
+                        <Typography variant="h6">{profile.first_name} {profile.last_name}</Typography>
+                        <Typography variant="body2">Diagnosis Date: {profile.diagnosis_date}</Typography>
+                        <Typography variant="body2">Severity: {profile.severity}</Typography>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          style={{ marginTop: '10px' }}
+                          onClick={() => handleOpenWizard(profile.id)}
+                        >
+                          Record Episode
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             ) : (
-              <p>No profiles found</p>
+              <div>
+                <FaUserSlash size={40} />
+                <Typography>No profiles found.</Typography>
+                <Button variant="contained" onClick={handleCreateProfile} style={{ marginTop: '10px' }}>
+                  Add Profile
+                </Button>
+              </div>
             )}
-          </div>
-        </div>
+          </Grid>
 
-        {/* Schools for Autism Card */}
-        <div style={cardStyle}>
-          <h3>Schools for Autism in Kenya</h3>
-          <div>
-            {schoolsForAutism.map((school, index) => (
-              <div key={index}>
-                <p>{school.name} - {school.location}</p>
-              </div>
-            ))}
-            <button 
-              style={buttonStyle}
-              onMouseOver={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
-              onMouseOut={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
-              onClick={() => navigate('/schools')}>Read More</button>
-          </div>
-        </div>
-
-        {/* Autism Specialists Card */}
-        <div style={cardStyle}>
-          <h3>Autism Specialists</h3>
-          <div>
-            {autismSpecialists.map((specialist, index) => (
-              <div key={index}>
-                <p>{specialist.name} - {specialist.specialty}</p>
-              </div>
-            ))}
-            <button 
-              style={buttonStyle}
-              onMouseOver={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
-              onMouseOut={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
-              onClick={() => navigate('/specialists')}>Read More</button>
-          </div>
-        </div>
+          {/* Schools and Therapists */}
+          <Grid item xs={12}>
+            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+              <CardContent>
+                <Typography variant="h5">Resources</Typography>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h6">Schools for Autism</Typography>
+                    {schoolsForAutism.map((school, index) => (
+                      <Typography key={index} variant="body2">
+                        {school.name}, {school.location} - {school.hotline}
+                      </Typography>
+                    ))}
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <Typography variant="h6">Autism Specialists</Typography>
+                    {autismSpecialists.map((specialist, index) => (
+                      <Typography key={index} variant="body2">
+                        {specialist.name}, {specialist.location} - {specialist.phone}
+                      </Typography>
+                    ))}
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
+
+      {/* Record Episode Wizard */}
+      {isWizardOpen && (
+        <RecordEpisodeWizard
+          profileId={selectedProfileId}
+          onClose={handleCloseWizard}
+        />
+      )}
     </div>
   );
 };
