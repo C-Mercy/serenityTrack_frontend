@@ -1,5 +1,5 @@
 // interventionApi.js
-import apiSlice from './apiSlice';
+import {apiSlice} from './apiSlice';
 
 export const interventionSlice= apiSlice.injectEndpoints({
   endpoints: (builder) => ({

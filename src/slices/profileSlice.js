@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {apiSlice} from "./apiSlice";
 
-const profileApi = createApi({
-  reducerPath: 'profileApi', // Unique name for this API slice
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8000' }),
+const profileApi = apiSlice.injectEndpoints({
+
   endpoints: (builder) => ({
     fetchProfiles: builder.query({
       query: () => '/api/v1/profile',
@@ -10,20 +10,18 @@ const profileApi = createApi({
     fetchProfileById: builder.query({
       query: (profileId) => `/api/v1/profile/${profileId}`,
     }),
-    createProfile: builder.mutation({
-      query: (profileData) => ({
-        url: '/api/v1/profile/create',
-        method: 'POST',
-        body: profileData,
-      }),
-    }),
-    updateProfile: builder.mutation({
-      query: ({ profileId, profileData }) => ({
-        url: `/api/v1/profile/update/${profileId}`,
-        method: 'PUT',
-        body: profileData,
-      }),
-    }),
+    createProfile: builder.mutation(
+        { query: ({ profileData, userId }) =>
+              ({ url: `/api/v1/create_profile`,
+                // Ensure userId is correctly used here
+                method: 'POST', body: profileData, }),
+
+        }),
+    updateProfile: builder.mutation(
+        { query: ({ profileData, userId, profileId }) =>
+              ({ url: `/api/v1/profile/${profileId}/update/`,
+                // Adjust URL to match your API
+                 method: 'PUT', body: profileData, }), }),
     deleteProfile: builder.mutation({
       query: (profileId) => ({
         url: `/api/v1/profile/delete/${profileId}`,

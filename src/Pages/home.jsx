@@ -4,32 +4,35 @@ import { useNavigate } from 'react-router-dom';
 import { FaUser, FaUserSlash } from 'react-icons/fa';
 import Countdown from 'react-countdown';
 import Navbar from "../components/header";
-import RecordEpisodeWizard from "../components/episodeWizard";
+import RecordEpisode from "../components/episodeWizard";
+import CreateProfile from "../components/createProfile";
 import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
+import { Link } from "react-router-dom";
+
+// Dummy Data for Schools and Therapists
+const dummySchools = [
+  { id: 1, name: "Sunshine Autism Center", location: "New York" },
+  { id: 2, name: "Blue Horizon Academy", location: "San Francisco" },
+];
+
+const dummyTherapists = [
+  { id: 1, name: "Dr. Jane Doe", specialization: "Speech Therapy" },
+  { id: 2, name: "Mr. John Smith", specialization: "Behavioral Therapy" },
+];
 
 const Home = () => {
   const userInfo = sessionStorage.getItem('user');
   const loggeduser = JSON.parse(userInfo);
+  console.log(loggeduser,"jj")
   const { data: user, isLoading, error } = useFetchUserByIdQuery(loggeduser.id);
 
   const navigate = useNavigate();
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [isCreateProfileOpen, setIsCreateProfileOpen] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState(null); // Track profile for editing
 
-  const schoolsForAutism = [
-    { name: 'Nairobi Primary School', location: 'Nairobi', hotline: '+254701234567', address: 'P.O. Box 12345, Nairobi' },
-    { name: 'Mombasa Academy', location: 'Mombasa', hotline: '+254712345678', address: 'P.O. Box 67890, Mombasa' },
-  ];
-
-  const autismSpecialists = [
-    { name: 'Dr. Mwangi', location: 'Nairobi', phone: '+254701234567', address: 'P.O. Box 12345, Nairobi' },
-    { name: 'Dr. Akinyi', location: 'Mombasa', phone: '+254712345678', address: 'P.O. Box 67890, Mombasa' },
-  ];
-
-  const handleCreateProfile = () => {
-    navigate('/create-profile');
-  };
-
+  // Modal handlers
   const handleOpenWizard = (profileId) => {
     setSelectedProfileId(profileId);
     setIsWizardOpen(true);
@@ -40,20 +43,39 @@ const Home = () => {
     setSelectedProfileId(null);
   };
 
+  const handleOpenCreateProfile = () => {
+    setCurrentProfile(null); // Reset for creating a new profile
+    setIsCreateProfileOpen(true);
+  };
+
+  const handleEditProfile = (profile) => {
+    setCurrentProfile(profile); // Set the profile for editing
+    setIsCreateProfileOpen(true);
+  };
+
+  const handleCloseCreateProfile = () => {
+    setIsCreateProfileOpen(false);
+    setCurrentProfile(null); // Reset after closing
+  };
+
+  // Countdown renderer for World Autism Day
   const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       return <span>It's World Autism Day!</span>;
-    } else {
-      return (
-        <Typography variant="body2">
-          {days} Days {hours} Hours {minutes} Minutes {seconds} Seconds
-        </Typography>
-      );
     }
+    return (
+      <Typography variant="body2">
+        {days} Days {hours} Hours {minutes} Minutes {seconds} Seconds
+      </Typography>
+    );
   };
 
   const currentYear = new Date().getFullYear();
-  const targetDate = new Date(`April 2, ${new Date() > new Date(`April 2, ${currentYear}`) ? currentYear + 1 : currentYear}`);
+  const targetDate = new Date(
+    `April 2, ${
+      new Date() > new Date(`April 2, ${currentYear}`) ? currentYear + 1 : currentYear
+    }`
+  );
 
   return (
     <div>
@@ -62,21 +84,23 @@ const Home = () => {
         <Grid container spacing={4}>
           {/* Welcome Back Card */}
           <Grid item xs={12} md={6}>
-            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px', height: '100%' }}>
               <CardContent>
                 <Typography variant="h5">Welcome Back, {loggeduser.username}</Typography>
                 <FaUser size={40} />
                 <Typography variant="body1">Explore your profiles and track progress.</Typography>
-                <Button variant="contained" color="primary" onClick={handleCreateProfile} style={{ marginTop: '10px' }}>
-                  Create Profile
-                </Button>
+                <div style={{ marginTop: '10px' }}>
+                  <Button variant="contained" color="primary" onClick={handleOpenCreateProfile}>
+                    Create Profile
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>
 
           {/* Countdown Card */}
           <Grid item xs={12} md={6}>
-            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px', height: '100%' }}>
               <CardContent>
                 <Typography variant="h5">Countdown to World Autism Day</Typography>
                 <Typography variant="subtitle1" style={{ color: 'blue' }}>2nd April</Typography>
@@ -85,7 +109,7 @@ const Home = () => {
             </Card>
           </Grid>
 
-          {/* Profiles */}
+          {/* Profiles Section */}
           <Grid item xs={12}>
             <Typography variant="h5" gutterBottom>Your Profiles</Typography>
             {isLoading ? (
@@ -95,20 +119,47 @@ const Home = () => {
             ) : user && user.profiles.length > 0 ? (
               <Grid container spacing={3}>
                 {user.profiles.map((profile) => (
-                  <Grid item xs={12} sm={6} md={3} key={profile.id}>
+                  <Grid item xs={12} sm={6} md={4} key={profile.id}>
                     <Card style={{ padding: '20px', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>
                       <CardContent>
-                        <Typography variant="h6">{profile.first_name} {profile.last_name}</Typography>
+                        <Typography variant="h6">
+                          {profile.first_name} {profile.last_name}
+                        </Typography>
                         <Typography variant="body2">Diagnosis Date: {profile.diagnosis_date}</Typography>
                         <Typography variant="body2">Severity: {profile.severity}</Typography>
+
+                        {/* Button to record an episode */}
                         <Button
                           variant="contained"
                           color="secondary"
                           size="small"
-                          style={{ marginTop: '10px' }}
+                          style={{ marginTop: '10px', marginRight: '10px' }}
                           onClick={() => handleOpenWizard(profile.id)}
                         >
-                          Record Episode
+                          Record a Tantrum
+                        </Button>
+
+                        {/* Button to view profile details */}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          style={{ marginTop: '10px', marginRight: '10px' }}
+                          component={Link}
+                          to={`/profile/${profile.id}`}
+                        >
+                          View Details
+                        </Button>
+
+                        {/* Button to edit the profile */}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          style={{ marginTop: '10px' }}
+                          onClick={() => handleEditProfile(profile)}
+                        >
+                          Edit Profile
                         </Button>
                       </CardContent>
                     </Card>
@@ -119,49 +170,68 @@ const Home = () => {
               <div>
                 <FaUserSlash size={40} />
                 <Typography>No profiles found.</Typography>
-                <Button variant="contained" onClick={handleCreateProfile} style={{ marginTop: '10px' }}>
-                  Add Profile
-                </Button>
               </div>
             )}
           </Grid>
 
-          {/* Schools and Therapists */}
+          {/* Schools Section */}
           <Grid item xs={12}>
-            <Card style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
-              <CardContent>
-                <Typography variant="h5">Resources</Typography>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Schools for Autism</Typography>
-                    {schoolsForAutism.map((school, index) => (
-                      <Typography key={index} variant="body2">
-                        {school.name}, {school.location} - {school.hotline}
-                      </Typography>
-                    ))}
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Autism Specialists</Typography>
-                    {autismSpecialists.map((specialist, index) => (
-                      <Typography key={index} variant="body2">
-                        {specialist.name}, {specialist.location} - {specialist.phone}
-                      </Typography>
-                    ))}
-                  </Grid>
+            <Typography variant="h5" gutterBottom>Schools</Typography>
+            <Grid container spacing={3}>
+              {dummySchools.slice(0, 2).map((school) => (
+                <Grid item xs={12} sm={6} md={4} key={school.id}>
+                  <Card style={{ padding: '20px', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>
+                    <CardContent>
+                      <Typography variant="h6">{school.name}</Typography>
+                      <Typography variant="body2">{school.location}</Typography>
+                    </CardContent>
+                  </Card>
                 </Grid>
-              </CardContent>
-            </Card>
+              ))}
+            </Grid>
+            <Button variant="text" color="primary" style={{ marginTop: '10px' }} onClick={() => navigate('/schools')}>
+              Read More
+            </Button>
+          </Grid>
+
+          {/* Therapists Section */}
+          <Grid item xs={12}>
+            <Typography variant="h5" gutterBottom>Therapists</Typography>
+            <Grid container spacing={3}>
+              {dummyTherapists.slice(0, 2).map((therapist) => (
+                <Grid item xs={12} sm={6} md={4} key={therapist.id}>
+                  <Card style={{ padding: '20px', borderRadius: '10px', backgroundColor: '#f9f9f9' }}>
+                    <CardContent>
+                      <Typography variant="h6">{therapist.name}</Typography>
+                      <Typography variant="body2">{therapist.specialization}</Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+            <Button variant="text" color="primary" style={{ marginTop: '10px' }} onClick={() => navigate('/therapists')}>
+              Read More
+            </Button>
           </Grid>
         </Grid>
       </div>
 
-      {/* Record Episode Wizard */}
+      {/* Record Episode Wizard Modal */}
       {isWizardOpen && (
-        <RecordEpisodeWizard
-          profileId={selectedProfileId}
+        <RecordEpisode
+          open={isWizardOpen}
           onClose={handleCloseWizard}
+          profileId={selectedProfileId} // Pass profile ID for episode creation
         />
       )}
+
+      {/* Create Profile Modal */}
+      {loggeduser && (
+          <CreateProfile isOpen={isCreateProfileOpen} onClose={handleCloseCreateProfile}
+                         userId={loggeduser.id} // Pass the correct userId
+        profile={currentProfile} /> )}
+
+
     </div>
   );
 };

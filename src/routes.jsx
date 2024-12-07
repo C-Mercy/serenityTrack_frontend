@@ -9,6 +9,7 @@ import Sessions from './Pages/sessions';
 import Therapists from './Pages/therapists';
 import Triggers from './Pages/triggers';
 import NotFound from "./Pages/notfound";
+import ProfileDetailsPage from "./Pages/profileDeatil";
 
 // PrivateRoute Component
 const PrivateRoute = ({ children }) => {
@@ -25,15 +26,19 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
+
       {/* Private Routes */}
       <Route
         path="/"
         element={
-          <PrivateRoute>
+
+            <PrivateRoute>
             <Home />
           </PrivateRoute>
+
         }
       />
+        <Route path="/profile/:profileId" element={<ProfileDetailsPage />} />
       <Route
         path="/interventions"
         element={

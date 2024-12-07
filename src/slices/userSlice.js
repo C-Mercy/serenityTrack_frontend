@@ -3,6 +3,7 @@ import {apiSlice} from "./apiSlice";
 
 const userSlice = apiSlice.injectEndpoints({
   reducerPath:"profileApi",
+
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({

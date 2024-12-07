@@ -40,6 +40,9 @@ const Login = () => {
       localStorage.setItem('token', access);
       localStorage.setItem('refresh', refresh);
       localStorage.setItem('user', JSON.stringify(user));
+      sessionStorage.setItem('token', access);
+      sessionStorage.setItem('refresh', refresh);
+      sessionStorage.setItem('user', JSON.stringify(user));
   
       // Dispatch the login action to save the user and token in the Redux store
       dispatch(login({ user, token: access }));
