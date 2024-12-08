@@ -7,8 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaHeart } from "react-icons/fa";
 import { useLoginMutation } from '../slices/userSlice';
 import { useDispatch } from 'react-redux';
-import {login} from "../slices/authSlice";
+import { login } from "../slices/authSlice";
 import { useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material'; // Import CircularProgress
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -31,11 +32,11 @@ const Login = () => {
       const { email, password } = values;
       const response = await loginUser({ username: email, password }).unwrap();
       const { user, access, refresh } = response;
-  
+
       // Success: Show success toast and navigate
       toast.success("Login Successful");
       navigate('/');
-  
+
       // Store tokens and user info in localStorage
       localStorage.setItem('token', access);
       localStorage.setItem('refresh', refresh);
@@ -43,13 +44,12 @@ const Login = () => {
       sessionStorage.setItem('token', access);
       sessionStorage.setItem('refresh', refresh);
       sessionStorage.setItem('user', JSON.stringify(user));
-  
+
       // Dispatch the login action to save the user and token in the Redux store
       dispatch(login({ user, token: access }));
-  
     } catch (err) {
       console.error('Login failed:', err);
-  
+
       // Check the error response for specific messages
       if (err?.data?.non_field_errors) {
         // General authentication error (e.g., incorrect credentials)
@@ -67,7 +67,6 @@ const Login = () => {
     }
     setSubmitting(false);
   };
-  
 
   return (
     <div className="container-fluid">
@@ -151,11 +150,11 @@ const Login = () => {
                               <p className="ms-1 mb-0">Remember Me</p>
                             </div>
                             <ErrorMessage name="remember" component="div" className="invalid-feedback" />
-                            <div className="text-end">
-                              <Link to="/forgot-password" className="link-danger">
-                                Forgot Password?
-                              </Link>
-                            </div>
+                            {/*<div className="text-end">*/}
+                            {/*  <Link to="/forgot-password" className="link-danger">*/}
+                            {/*    Forgot Password?*/}
+                            {/*  </Link>*/}
+                            {/*</div>*/}
                           </div>
                         </div>
                         <div className="p-4 pt-0">
@@ -163,9 +162,9 @@ const Login = () => {
                             <button
                               type="submit"
                               className="btn btn-primary w-100"
-                              disabled={isSubmitting}
+                              disabled={isSubmitting || isLoading} // Disable button if submitting or loading
                             >
-                              Sign In
+                              {isSubmitting || isLoading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
                             </button>
                           </div>
                           <div className="text-center">
@@ -178,8 +177,9 @@ const Login = () => {
                           </div>
                         </div>
                         <div className="mt-5 text-center">
-        <p className="mb-0">Copyright © {new Date().getFullYear()} - SerenityTrack <FaHeart style={{ color: 'red' }} /></p>
-      </div></div>
+                          <p className="mb-0">Copyright © {new Date().getFullYear()} - SerenityTrack <FaHeart style={{ color: 'red' }} /></p>
+                        </div>
+                      </div>
                     </Form>
                   )}
                 </Formik>
@@ -195,7 +195,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-    
     </div>
   );
 };

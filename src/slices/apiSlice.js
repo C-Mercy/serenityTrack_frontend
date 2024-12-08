@@ -1,15 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Define the base query with a base URL and prepareHeaders function
+// Define the base query
 const baseQuery = fetchBaseQuery({
   baseUrl: 'http://localhost:8000', // Adjust this base URL as needed
-  prepareHeaders: (headers) => {
-    const token = sessionStorage.getItem('token'); // Retrieve the token from session storage
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`); // Set the Authorization header
-    }
-    return headers;
-  },
+
 });
 
 // Create the API slice

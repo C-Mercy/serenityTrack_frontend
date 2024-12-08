@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button } from '@mui/material';
-import { useCreateBehaviorMutation } from '../slices/behaviorSlice'; // Assuming you have a behavior slice
+import { TextField, Button, Grid, FormControl, InputLabel } from '@mui/material';
+import { useCreateBehaviorMutation } from '../slices/behaviorSlice';
+import {toast} from "react-toastify";
 
 const BehaviorStep = ({ nextStep, profileId, episodeId }) => {
   const [behaviorData, setBehaviorData] = useState({
@@ -17,26 +18,70 @@ const BehaviorStep = ({ nextStep, profileId, episodeId }) => {
     setBehaviorData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Create the behavior and capture the returned ID
-      const createdBehavior = await createBehavior({ ...behaviorData, episode: episodeId, profile: profileId }).unwrap();
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const createdBehavior = await createBehavior({ ...behaviorData, episode: episodeId, profile: profileId }).unwrap();
+    nextStep(createdBehavior.id); // Send behaviorId back to parent
+    toast.success('Behavior created successfully!');
+  } catch (err) {
+    console.error('Error creating behavior:', err);
+    toast.error('Failed to create behavior. Please try again.');
+  }
+};
 
-      // Pass the behavior ID back to the parent via nextStep
-      nextStep(createdBehavior.id); // Send behaviorId back to parent
-    } catch (err) {
-      console.error('Error creating behavior:', err);
-    }
-  };
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField label="Behavior Type" name="behavior_type" value={behaviorData.behavior_type} onChange={handleChange} required />
-      <TextField label="Description" name="description" value={behaviorData.description} onChange={handleChange} required />
-      <TextField label="Frequency" name="frequency" value={behaviorData.frequency} onChange={handleChange} required />
-      <TextField label="Context" name="context" value={behaviorData.context} onChange={handleChange} required />
-      <Button type="submit">Next</Button>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel id="behavior_type-label">Behavior Type</InputLabel>
+            <TextField
+              label="Behavior Type"
+              name="behavior_type"
+              value={behaviorData.behavior_type}
+              onChange={handleChange}
+              required
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Description"
+            name="description"
+            value={behaviorData.description}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Frequency"
+            name="frequency"
+            value={behaviorData.frequency}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Context"
+            name="context"
+            value={behaviorData.context}
+            onChange={handleChange}
+            fullWidth
+            required
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button type="submit" variant="contained" color="primary">
+            Next
+          </Button>
+        </Grid>
+      </Grid>
     </form>
   );
 };

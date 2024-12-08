@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete, AddCircle } from '@mui/icons-material';
 import { toast } from 'react-toastify';
+import Navbar from "../components/header";
 
 const Sessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -105,6 +106,7 @@ const Sessions = () => {
   };
 
   return (
+      <><Navbar/>
     <Box padding={4}>
       <Typography variant="h4" gutterBottom>
         Therapy Sessions
@@ -219,6 +221,7 @@ const Sessions = () => {
         </Box>
       </Modal>
     </Box>
+        </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import axios from "axios";
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 
 const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfiles }) => {
   const [formData, setFormData] = useState({
@@ -49,7 +49,7 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
 
     const profileDataWithUserId = {
       ...formData,
-      user_id: userId,  // Send the user_id in the request body
+      user_id: userId,
     };
 
     try {

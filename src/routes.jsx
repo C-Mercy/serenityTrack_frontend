@@ -9,7 +9,7 @@ import Sessions from './Pages/sessions';
 import Therapists from './Pages/therapists';
 import Triggers from './Pages/triggers';
 import NotFound from "./Pages/notfound";
-import ProfileDetailsPage from "./Pages/profileDeatil";
+import ProfileDetailsPage from "./Pages/profileDetail";
 
 // PrivateRoute Component
 const PrivateRoute = ({ children }) => {

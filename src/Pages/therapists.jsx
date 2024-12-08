@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, CardContent, Typography, Grid, IconButton, TextField, Menu, MenuItem, Button, Modal, Box } from '@mui/material';
 import { FormatListBulleted, GridView } from '@mui/icons-material';
 import { FaUser } from 'react-icons/fa';
+import Navbar from "../components/header";
 
 const dummyTherapistsData = [
   {
@@ -118,6 +119,7 @@ const Therapists = () => {
   );
 
   return (
+      <> <Navbar/>
     <div style={{ padding: '20px', backgroundColor: '#f0f8ff', color: '#00008b' }}>
       <Typography variant="h4" gutterBottom>
         Therapists
@@ -345,6 +347,7 @@ const Therapists = () => {
         </Box>
       </Modal>
     </div>
+        </>
   );
 };
 

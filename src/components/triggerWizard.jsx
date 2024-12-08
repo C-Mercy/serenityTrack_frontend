@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Grid } from '@mui/material';
 import { useCreateTriggerMutation} from "../slices/triggersSlice";
+import {toast} from "react-toastify";
 
 const TriggerStep = ({ nextStep, profileId, episodeId }) => {
   const [triggerData, setTriggerData] = useState({
@@ -24,8 +25,10 @@ const TriggerStep = ({ nextStep, profileId, episodeId }) => {
     try {
       const trigger = await createTrigger({ ...triggerData, episode: episodeId, profile: profileId }).unwrap();
       nextStep();
+      toast.success('Trigger created successfully!');
     } catch (err) {
       console.error('Error creating trigger:', err);
+      toast.error('Trigger creation unsuccessful. Try Again!');
     }
   };
 

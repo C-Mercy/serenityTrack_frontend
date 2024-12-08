@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, CardContent, Typography, Grid, IconButton, TextField, Menu, MenuItem, Button, Modal, Box } from '@mui/material';
 import { FormatListBulleted, GridView } from '@mui/icons-material';
 import { FaSchool } from 'react-icons/fa';
+import Navbar from "../components/header";
 
 const dummySchoolsData = [
   {
@@ -124,6 +125,8 @@ const Schools = () => {
   );
 
   return (
+      <>
+        <Navbar/>
     <div style={{ padding: '20px', backgroundColor: '#f0f8ff', color: '#00008b' }}>
       <Typography variant="h4" gutterBottom>
         Schools
@@ -351,6 +354,7 @@ const Schools = () => {
         </Box>
       </Modal>
     </div>
+  </>
   );
 };
 

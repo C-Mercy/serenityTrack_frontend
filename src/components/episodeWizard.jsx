@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Grid, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { useCreateEpisodeMutation } from "../slices/episodeSlice"; // Assuming you have this slice for episodes
-import { useCreateTriggerMutation } from "../slices/triggersSlice"; // Your slice for triggers
-import TriggerStep from "./triggerWzard";
+import { useCreateEpisodeMutation } from "../slices/episodeSlice";
+import { useCreateTriggerMutation } from "../slices/triggersSlice";
+import TriggerStep from "./triggerWizard";
 import BehaviorStep from "./behaviorWizard";
 import InterventionStep from "./interventionWizard";
 

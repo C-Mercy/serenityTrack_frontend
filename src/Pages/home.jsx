@@ -30,7 +30,7 @@ const Home = () => {
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isCreateProfileOpen, setIsCreateProfileOpen] = useState(false);
-  const [currentProfile, setCurrentProfile] = useState(null); // Track profile for editing
+  const [currentProfile, setCurrentProfile] = useState(null);
 
   // Modal handlers
   const handleOpenWizard = (profileId) => {
@@ -221,14 +221,14 @@ const Home = () => {
         <RecordEpisode
           open={isWizardOpen}
           onClose={handleCloseWizard}
-          profileId={selectedProfileId} // Pass profile ID for episode creation
+          profileId={selectedProfileId}
         />
       )}
 
       {/* Create Profile Modal */}
       {loggeduser && (
           <CreateProfile isOpen={isCreateProfileOpen} onClose={handleCloseCreateProfile}
-                         userId={loggeduser.id} // Pass the correct userId
+                         userId={loggeduser.id}
         profile={currentProfile} /> )}
 
 
