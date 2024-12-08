@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, Typography, TextField, Button } from '@mui/material';
+import { Modal, Box, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from "axios";
 import { toast } from 'react-toastify';
+
+const severityOptions = [
+  { value: 'Low', label: 'low' },
+  { value: 'Medium', label: 'medium' },
+  { value: 'High', label: 'high' },
+];
+
+const communicationLevels = [
+  { value: 'Verbal', label: 'Verbal' },
+  { value: 'Non-verbal', label: 'Non-verbal' },
+  { value: 'Limited verbal', label: 'Limited verbal' },
+  { value: 'Augmentative and Alternative Communication (AAC)', label: 'AAC' },
+];
 
 const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfiles }) => {
   const [formData, setFormData] = useState({
@@ -12,10 +25,6 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
     severity: '',
     communication_level: '',
   });
-
-  useEffect(() => {
-    console.log('userId:', userId);
-  }, [userId]);
 
   useEffect(() => {
     if (profile) {
@@ -55,19 +64,14 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
     try {
       let response;
       if (profile) {
-        // If profile exists, update it
         response = await axios.put(`http://localhost:8000/api/v1/user/${userId}/profile/${profile.id}/update/`, profileDataWithUserId);
       } else {
-        // If no profile, create a new one
         response = await axios.post('http://localhost:8000/api/v1/create_profile', profileDataWithUserId);
       }
-      console.log(response.data);
-
-      // Show success toast
       toast.success(profile ? 'Profile updated successfully!' : 'Profile created successfully!');
-      onClose(); // Close the modal after submission
+      onClose();
       if (refreshProfiles) {
-        refreshProfiles(); // Refresh the list of profiles after update or creation
+        refreshProfiles();
       }
     } catch (err) {
       console.error('Failed to create or update profile:', err);
@@ -82,13 +86,11 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
     }
 
     try {
-      const response = await axios.delete(`http://localhost:8000/api/v1/profile/delete/${profile.id}`);
-      console.log(response.data);
-
+      await axios.delete(`http://localhost:8000/api/v1/profile/delete/${profile.id}`);
       toast.success('Profile deleted successfully!');
-      onClose(); // Close the modal after deletion
+      onClose();
       if (refreshProfiles) {
-        refreshProfiles(); // Refresh the profile list after deletion
+        refreshProfiles();
       }
     } catch (err) {
       console.error('Failed to delete profile:', err);
@@ -155,34 +157,50 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
             InputLabelProps={{ shrink: true }}
             required
           />
-          <TextField
-            label="Severity"
-            name="severity"
-            fullWidth
-            value={formData.severity}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Communication Level"
-            name="communication_level"
-            fullWidth
-            value={formData.communication_level}
-            onChange={handleChange}
-            margin="normal"
-            required
-          />
+
+          {/* Severity Dropdown */}
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="severity-label">Severity</InputLabel>
+            <Select
+              labelId="severity-label"
+              name="severity"
+              value={formData.severity}
+              onChange={handleChange}
+              label="Severity"
+              required
+            >
+              {severityOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Communication Level Dropdown */}
+          <FormControl fullWidth margin="normal" required>
+            <InputLabel id="communication-level-label">Communication Level</InputLabel>
+            <Select
+              labelId="communication-level-label"
+              name="communication_level"
+              value={formData.communication_level}
+              onChange={handleChange}
+              label="Communication Level"
+              required
+            >
+              {communicationLevels.map((level) => (
+                <MenuItem key={level.value} value={level.value}>
+                  {level.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Box mt={2} display="flex" justifyContent="space-between">
             <Button onClick={onClose} color="secondary" variant="outlined">
               Cancel
             </Button>
-            <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              disabled={false} // Disable if necessary
-            >
+            <Button type="submit" color="primary" variant="contained">
               {profile ? 'Update Profile' : 'Create Profile'}
             </Button>
           </Box>

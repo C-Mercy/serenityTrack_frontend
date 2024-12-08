@@ -74,16 +74,16 @@ const TriggerStep = ({ nextStep, profileId, episodeId }) => {
             required
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Severity"
-            name="severity"
-            value={triggerData.severity}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-        </Grid>
+      <Grid item xs={12}>
+        <FormControl fullWidth required>
+          <InputLabel id="severity-label">
+            Severity</InputLabel>
+          <Select labelId="severity-label" name="severity"
+                  value={triggerData.severity} onChange={handleChange} >
+            <MenuItem value="High">High</MenuItem>
+            <MenuItem value="Medium">Medium</MenuItem>
+            <MenuItem value="Low">Low</MenuItem>
+          </Select> </FormControl> </Grid>
         <Grid item xs={12}>
           <TextField
             label="Management Strategy"

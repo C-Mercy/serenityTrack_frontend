@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, FormControl, InputLabel } from '@mui/material';
+import {TextField, Button, Grid, FormControl, InputLabel, MenuItem, Select} from '@mui/material';
 import { useCreateInterventionMutation } from '../slices/interventionSlice';
 import {toast} from "react-toastify";
 
@@ -45,18 +45,30 @@ const InterventionStep = ({ onComplete, profileId, episodeId, behaviorId }) => {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
+
         <Grid item xs={12}>
-          <FormControl fullWidth>
+          <FormControl fullWidth required>
             <InputLabel id="intervention_type-label">Intervention Type</InputLabel>
-            <TextField
-              label="Intervention Type"
+            <Select
+              labelId="intervention_type-label"
               name="intervention_type"
               value={interventionData.intervention_type}
               onChange={handleChange}
-              required
-            />
+              label="Intervention Type"
+            >
+              <MenuItem value="Calming Down">Calming Down</MenuItem>
+              <MenuItem value="Giving Something Comforting">Giving Something Comforting</MenuItem>
+              <MenuItem value="Hugging">Hugging</MenuItem>
+              <MenuItem value="Distraction with Favorite Activity">Distraction with Favorite Activity</MenuItem>
+              <MenuItem value="Using Visual Aids">Using Visual Aids</MenuItem>
+              <MenuItem value="Deep Pressure Techniques">Deep Pressure Techniques</MenuItem>
+              <MenuItem value="Soft Music or White Noise">Soft Music or White Noise</MenuItem>
+            </Select>
           </FormControl>
         </Grid>
+
+
+
         <Grid item xs={12}>
           <TextField
             label="Description"

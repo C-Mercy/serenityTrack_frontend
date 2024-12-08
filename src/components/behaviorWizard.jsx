@@ -60,6 +60,8 @@ const handleSubmit = async (e) => {
           <TextField
             label="Frequency"
             name="frequency"
+            inputMode={"numeric"}
+            InputProps={{ inputProps: { min: 0 } }}
             value={behaviorData.frequency}
             onChange={handleChange}
             fullWidth
@@ -70,6 +72,7 @@ const handleSubmit = async (e) => {
           <TextField
             label="Context"
             name="context"
+
             value={behaviorData.context}
             onChange={handleChange}
             fullWidth

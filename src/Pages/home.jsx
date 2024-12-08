@@ -189,7 +189,7 @@ const Home = () => {
                 </Grid>
               ))}
             </Grid>
-            <Button variant="text" color="primary" style={{ marginTop: '10px' }} onClick={() => navigate('/schools')}>
+            <Button variant="text" color="primary"variant="contained" style={{ marginTop: '10px' }} onClick={() => navigate('/schools')}>
               Read More
             </Button>
           </Grid>
@@ -209,7 +209,7 @@ const Home = () => {
                 </Grid>
               ))}
             </Grid>
-            <Button variant="text" color="primary" style={{ marginTop: '10px' }} onClick={() => navigate('/therapists')}>
+            <Button variant="text" color="primary" variant="contained" style={{ marginTop: '10px' }} onClick={() => navigate('/therapists')}>
               Read More
             </Button>
           </Grid>
