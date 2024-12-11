@@ -22,7 +22,7 @@ import {
   TextField,
   TablePagination
 } from '@mui/material';
-import { Edit, Delete, MoreVert, Sort } from '@mui/icons-material';
+import {Edit, Delete, MoreVert, Sort, Person} from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import ReusableModal from "../components/reusableModal";
 import Navbar from "../components/header";
@@ -113,14 +113,27 @@ const ProfileDetail = () => {
      <> <Navbar />
     <Box padding={2}>
       <Card sx={{ marginBottom: 4 }}>
-        <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {profile.first_name} {profile.last_name}
-          </Typography>
-          <Typography variant="body1"><strong>Date of Birth:</strong> {profile.date_of_birth}</Typography>
-          <Typography variant="body1"><strong>Diagnosis Date:</strong> {profile.diagnosis_date}</Typography>
-        </CardContent>
-      </Card>
+  <CardContent>
+    <Box display="flex" alignItems="center">
+      <Person sx={{ fontSize: 40, marginRight: 2 }} /> {/* Icon with size and margin */}
+      <Typography variant="h4" gutterBottom>
+        {profile.first_name} {profile.last_name}
+      </Typography>
+    </Box>
+    <Typography variant="body1" sx={{ marginTop: 1 }}>
+      <strong>Date of Birth:</strong> {profile.date_of_birth}
+    </Typography>
+    <Typography variant="body1">
+      <strong>Diagnosis Date:</strong> {profile.diagnosis_date}
+    </Typography>
+    <Typography variant="body1">
+      <strong>Severity:</strong> {profile.severity}
+    </Typography>
+    <Typography variant="body1">
+      <strong>Communication Level:</strong> {profile.communication_level}
+    </Typography>
+  </CardContent>
+</Card>
 
       {/* Search and Sort Functionality */}
       <Box display="flex" justifyContent="space-between" mb={2}>

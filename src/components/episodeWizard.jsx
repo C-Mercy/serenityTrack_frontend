@@ -71,6 +71,7 @@ const RecordEpisode = ({ profileId, onClose }) => {
     console.log(behaviorId,"veddd")
     onClose();
   };
+    const today = new Date().toISOString().split('T')[0];
 
   return (
     <Dialog open={true} onClose={onClose} fullWidth maxWidth="md">
@@ -108,6 +109,7 @@ const RecordEpisode = ({ profileId, onClose }) => {
                   onChange={handleChange}
                   fullWidth
                   required
+                  inputProps={{ max: today }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -119,6 +121,7 @@ const RecordEpisode = ({ profileId, onClose }) => {
                   onChange={handleChange}
                   fullWidth
                   required
+                  inputProps={{ max: today }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -130,6 +133,7 @@ const RecordEpisode = ({ profileId, onClose }) => {
                   onChange={handleChange}
                   fullWidth
                   required
+                  inputProps={{ max: today }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>

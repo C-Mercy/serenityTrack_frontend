@@ -76,6 +76,7 @@ const Home = () => {
       new Date() > new Date(`April 2, ${currentYear}`) ? currentYear + 1 : currentYear
     }`
   );
+    const today = new Date().toISOString().split('T')[0];
 
   return (
     <div>
@@ -111,7 +112,7 @@ const Home = () => {
 
           {/* Profiles Section */}
           <Grid item xs={12}>
-            <Typography variant="h5" gutterBottom>Your Profiles</Typography>
+            <Typography variant="h5" gutterBottom>{loggeduser.username}'s Profiles</Typography>
             {isLoading ? (
               <Typography>Loading profiles...</Typography>
             ) : error ? (

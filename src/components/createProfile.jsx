@@ -16,6 +16,7 @@ const communicationLevels = [
   { value: 'Augmentative and Alternative Communication (AAC)', label: 'AAC' },
 ];
 
+
 const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfiles }) => {
   const [formData, setFormData] = useState({
     first_name: '',
@@ -59,6 +60,7 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
     const profileDataWithUserId = {
       ...formData,
       user_id: userId,
+      user:userId
     };
 
     try {
@@ -92,11 +94,13 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
       if (refreshProfiles) {
         refreshProfiles();
       }
+      window.location.reload();
     } catch (err) {
       console.error('Failed to delete profile:', err);
       toast.error('An error occurred while deleting the profile.');
     }
   };
+    const today = new Date().toISOString().split('T')[0];
 
   return (
     <Modal open={isOpen} onClose={onClose} aria-labelledby="create-profile-modal">
@@ -145,6 +149,7 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
             margin="normal"
             InputLabelProps={{ shrink: true }}
             required
+            inputProps={{ max: today }}
           />
           <TextField
             label="Diagnosis Date"
@@ -156,6 +161,7 @@ const CreateProfile = ({ isOpen, onClose, userId, profile = null, refreshProfile
             margin="normal"
             InputLabelProps={{ shrink: true }}
             required
+            inputProps={{ max: today }}
           />
 
           {/* Severity Dropdown */}
